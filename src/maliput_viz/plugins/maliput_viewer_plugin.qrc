@@ -1,0 +1,12 @@
+<!DOCTYPE RCC><RCC version="1.0">
+  <qresource prefix="MaliputViewerPlugin/">
+    <file>MaliputViewerPlugin.qml</file>
+    <file>MaliputBackendConfigurationArea.qml</file>
+    <file>LayersSelectionArea.qml</file>
+    <file>LabelsSelectionArea.qml</file>
+    <file>LanesListArea.qml</file>
+    <file>RulesListArea.qml</file>
+    <file>PhaseSelectionArea.qml</file>
+    <file>InfoArea.qml</file>
+  </qresource>
+</RCC>
