@@ -37,6 +37,13 @@ After hitting the `Load Road Network` button the correspondant backend will load
 
 The UI provides several options for changing visibilities of the meshes and also providing useful information about several things like: lane description, rules and phases, among others.
 
+### Demo
+
+The following video shows a maliput Road Network being loaded using [`maliput_malidrive`](https://github.com/maliput/maliput_malidrive) backend.
+Besides the XODR files for the `RoadGeometry`, also other entities are being loaded to complete the `RoadNetwork` such as: `RuleRegistry`, `RoadRulebook`, `TrafficLightBook` and `PhaseRingBook`.
+
+https://user-images.githubusercontent.com/53065142/205377851-1a431030-c869-46b9-aa0c-8eed3fb26587.mp4
+
 ## Installation
 
 ### Supported platforms
