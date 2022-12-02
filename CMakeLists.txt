@@ -13,23 +13,7 @@ message(STATUS "\n\n====== Finding 3rd Party Packages ======\n")
 
 find_package(ament_cmake REQUIRED)
 
-# ignition
-# find_package(ignition-common3 REQUIRED)
-# find_package(ignition-math6 REQUIRED)
-# find_package(ignition-msgs5 REQUIRED)
 find_package(ignition-gui3 REQUIRED)
-# find_package(ignition-rendering3 REQUIRED)
-# find_package(ignition-transport8 REQUIRED)
-
-# Qt
-# find_package(Qt5Widgets REQUIRED)
-# find_package(Qt5Core REQUIRED)
-# find_package(Qt5OpenGL REQUIRED)
-# find_package(Qt5Quick REQUIRED)
-# find_package(Qt5QuickControls2 REQUIRED)
-# find_package(Qt5Test REQUIRED)
-
-# delphyne, drake and maliput
 find_package(maliput REQUIRED)
 
 ##############################################################################
@@ -82,13 +66,6 @@ endif()
 # Export
 ##############################################################################
 
-# install(
-#   DIRECTORY include/
-#   DESTINATION include
-# )
-
-
-# ament_export_include_directories(include)
 ament_export_dependencies(ament_cmake)
 ament_export_targets(${PROJECT_NAME}-targets HAS_LIBRARY_TARGET)
 
