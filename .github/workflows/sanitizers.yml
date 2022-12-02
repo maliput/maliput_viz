@@ -1,0 +1,81 @@
+name: clang
+
+on:
+  pull_request:
+    types: [labeled]
+  workflow_dispatch:
+
+env:
+  PACKAGE_NAME: maliput_viz
+  ROS_DISTRO: foxy
+  ROS_WS: maliput_ws
+  UBSAN_OPTIONS: halt_on_error=1
+
+jobs:
+  compile_and_test:
+    if: contains(github.event.pull_request.labels.*.name, 'do-clang-test')
+    name: Compile and test with sanitizer
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:20.04
+    strategy:
+      matrix:
+        sanitizer: [none, asan, ubsan, tsan]
+        include:
+          - sanitizer: none
+            COMPILER_FLAG: ''
+          - sanitizer: asan
+            COMPILER_FLAG: ' -DADDRESS_SANITIZER=On'
+          - sanitizer: tsan
+            COMPILER_FLAG: ' -DTHREAD_SANITIZER=On'
+          - sanitizer: ubsan
+            COMPILER_FLAG: ' -DUNDEFINED_SANITIZER=On'
+    env:
+      CC: clang-8
+      CXX: clang++-8
+      LDFLAGS: -fuse-ld=lld-8
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: ${{ env.ROS_WS }}/src/${{ env.PACKAGE_NAME }}
+    # use setup-ros action to get vcs, rosdep, and colcon
+    - uses: ros-tooling/setup-ros@v0.3
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+    - name: clang 8 install
+      shell: bash
+      run: ${{ env.ROS_WS }}/src/${{ env.PACKAGE_NAME }}/.github/clang_suite_installation.sh
+    - name: vcs import
+      shell: bash
+      working-directory: ${{ env.ROS_WS }}
+      run: vcs import src < src/${PACKAGE_NAME}/.github/dependencies.repos
+    - name: check if dependencies have a matching branch
+      shell: bash
+      working-directory: ${{ env.ROS_WS }}/src
+      run: ./${PACKAGE_NAME}/.github/try_vcs_checkout ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}} .
+    - run: colcon graph
+      shell: bash
+      working-directory: ${{ env.ROS_WS }}
+    - name: rosdep install
+      shell: bash
+      working-directory: ${{ env.ROS_WS }}
+      run: |
+        rosdep update;
+        rosdep install  -i -y --rosdistro ${ROS_DISTRO} --from-paths src
+    - name: colcon build
+      shell: bash
+      working-directory: ${{ env.ROS_WS }}
+      env:
+        COMPILER_FLAG: ${{ matrix.COMPILER_FLAG }}
+      run: |
+        . /opt/ros/${ROS_DISTRO}/setup.bash;
+        colcon build --packages-up-to ${PACKAGE_NAME} \
+          --event-handlers=console_direct+ \
+          --cmake-args ${COMPILER_FLAG}
+    - name: colcon test
+      shell: bash
+      working-directory: ${{ env.ROS_WS }}
+      run: |
+        . /opt/ros/${ROS_DISTRO}/setup.bash;
+        colcon test --packages-select ${PACKAGE_NAME} --event-handlers=console_direct+;
+        colcon test-result --verbose;
