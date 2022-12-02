@@ -29,8 +29,6 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "traffic_light_manager.hh"
 
-#include <maliput/common/maliput_abort.h>
-#include <maliput/common/maliput_throw.h>
 #include <ignition/common/Console.hh>
 #include <ignition/common/MeshManager.hh>
 #include <ignition/common/SystemPaths.hh>
@@ -40,6 +38,8 @@
 #include <maliput/api/lane_data.h>
 #include <maliput/api/rules/phase.h>
 #include <maliput/api/rules/traffic_lights.h>
+#include <maliput/common/maliput_abort.h>
+#include <maliput/common/maliput_throw.h>
 
 namespace maliput {
 namespace viz {
@@ -183,8 +183,8 @@ void TrafficLightManager::CreateRoundBulbMeshInManager() {
 void TrafficLightManager::CreateArrowBulbMeshInManager() {
   const std::list<std::string> paths = ignition::common::SystemPaths::PathsFromEnv("DELPHYNE_GUI_RESOURCE_ROOT");
   MALIPUT_VALIDATE(!paths.empty(),
-                    "DELPHYNE_RESOURCE_ROOT environment "
-                    "variable is not set");
+                   "DELPHYNE_RESOURCE_ROOT environment "
+                   "variable is not set");
   const std::vector<std::string> resource_paths(paths.begin(), paths.end());
   arrowName = ignition::common::SystemPaths::LocateLocalFile(kArrowBulbOBJFilePath, resource_paths);
   MALIPUT_DEMAND(!arrowName.empty());

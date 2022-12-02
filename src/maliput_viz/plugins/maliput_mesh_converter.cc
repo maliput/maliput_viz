@@ -44,7 +44,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include <maliput/common/maliput_abort.h>
 #include <ignition/common/SubMesh.hh>
 #include <ignition/math/Vector3.hh>
 #include <maliput/api/branch_point.h>
@@ -53,6 +52,7 @@
 #include <maliput/api/lane_data.h>
 #include <maliput/api/road_geometry.h>
 #include <maliput/api/segment.h>
+#include <maliput/common/maliput_abort.h>
 #include <maliput/utility/mesh.h>
 
 using namespace maliput::utility::mesh;

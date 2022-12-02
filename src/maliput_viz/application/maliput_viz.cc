@@ -68,7 +68,6 @@ int Main(int argc, char** argv) {
   ignition::common::Console::SetVerbosity(3);
   ignmsg << kVersionStr << std::endl;
 
-
   // Initialize app
   ignition::gui::Application app(argc, argv);
 

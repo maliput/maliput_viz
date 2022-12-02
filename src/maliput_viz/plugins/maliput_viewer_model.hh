@@ -35,7 +35,6 @@
 #include <sstream>
 #include <string>
 
-#include <maliput/common/maliput_abort.h>
 #include <ignition/common/Mesh.hh>
 #include <ignition/math/Vector3.hh>
 #include <maliput/api/lane.h>
@@ -45,6 +44,7 @@
 #include <maliput/api/rules/phase.h>
 #include <maliput/api/rules/right_of_way_rule.h>
 #include <maliput/api/rules/traffic_lights.h>
+#include <maliput/common/maliput_abort.h>
 #include <maliput/utility/generate_obj.h>
 #include <maliput/utility/mesh.h>
 

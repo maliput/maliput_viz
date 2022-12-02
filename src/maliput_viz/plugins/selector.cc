@@ -30,7 +30,6 @@
 
 #include "selector.hh"
 
-#include <maliput/common/maliput_abort.h>
 #include <ignition/common/Console.hh>
 #include <ignition/math/Helpers.hh>
 #include <ignition/math/Matrix4.hh>
@@ -40,6 +39,7 @@
 #include <ignition/rendering/Scene.hh>
 #include <maliput/api/lane.h>
 #include <maliput/api/lane_data.h>
+#include <maliput/common/maliput_abort.h>
 
 namespace maliput {
 namespace viz {
