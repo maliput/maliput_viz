@@ -1,0 +1,28 @@
+name: gcc
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  PACKAGE_NAME: maliput_viz
+  ROS_DISTRO: foxy
+
+jobs:
+  compile_and_test:
+    name: Compile and test
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:20.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: ros-tooling/setup-ros@v0.3
+    - uses: ros-tooling/action-ros-ci@v0.2
+      id: action_ros_ci_step
+      with:
+        package-name: ${{ env.PACKAGE_NAME }}
+        target-ros2-distro: ${{ env.ROS_DISTRO }}
+        vcs-repo-file-url: ${GITHUB_WORKSPACE}/.github/dependencies.repos
