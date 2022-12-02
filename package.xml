@@ -5,7 +5,7 @@
   <version>0.0.1</version>
   <description>Maliput visualizer</description>
   <maintainer email="daniel.stonier@tri.global">Daniel Stonier</maintainer>
-  <license file="LICENSE">BSD Clause 3</license>
+  <license file="LICENSE">BSD-3-Clause</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <doc_depend>ament_cmake_doxygen</doc_depend>

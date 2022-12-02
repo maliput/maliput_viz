@@ -52,7 +52,7 @@
 #include <maliput/api/lane_data.h>
 #include <maliput/api/road_geometry.h>
 #include <maliput/api/segment.h>
-#include <maliput/common/maliput_abort.h>
+#include <maliput/common/maliput_throw.h>
 #include <maliput/utility/mesh.h>
 
 using namespace maliput::utility::mesh;
@@ -75,7 +75,7 @@ namespace {
 // @throws std::runtime_error When `unordered_vector`' size is zero.
 std::vector<std::tuple<ignition::math::Vector3d, int>> PolarSort(
     const std::vector<std::tuple<ignition::math::Vector3d, int>>& unordered_vector) {
-  MALIPUT_DEMAND(unordered_vector.size() > 0);
+  MALIPUT_THROW_UNLESS(unordered_vector.size() > 0);
 
   std::vector<std::tuple<ignition::math::Vector3d, int>> ordered_vector = unordered_vector;
 
@@ -87,10 +87,10 @@ std::vector<std::tuple<ignition::math::Vector3d, int>> PolarSort(
   }
   center /= static_cast<double>(points.size());
 
-  // TODO(agalbachicar)    This polar sort should be done with respect to the
-  //                       plane of all the points in the face instead of the
-  //                       plane z=0. We need the normal of the plane to do
-  //                       so.
+  // TODO(#4): This polar sort should be done with respect to the
+  //           plane of all the points in the face instead of the
+  //           plane z=0. We need the normal of the plane to do
+  //           so.
   std::sort(
       ordered_vector.begin(), ordered_vector.end(),
       [center](const std::tuple<ignition::math::Vector3d, int>& a, const std::tuple<ignition::math::Vector3d, int>& b) {
@@ -121,13 +121,9 @@ std::unique_ptr<ignition::common::Mesh> Convert(const std::string& name, const G
   }
 
   auto mesh = std::make_unique<ignition::common::Mesh>();
-  // TODO(agalbachicar):    ignition::rendering and ignition::common do not
-  //                        support unloading meshes. So, as for now, we need to
-  //                        create meshes with unique names (by adding an
-  //                        increasing ID to name) so it can be referenced and
-  //                        not mixed with another mesh.
-  //                        This ticket has been created to track this issue:
-  // https://bitbucket.org/ignitionrobotics/ign-rendering/issues/27/mesh-addition-removal-and-addition-with
+  // ignition::rendering and ignition::common do not support unloading meshes. So, as for now, we need to
+  // create meshes with unique names (by adding an increasing ID to name) so it can be referenced and
+  // not mixed with another mesh. See: https://github.com/gazebosim/gz-rendering/issues/27
   mesh->SetName(GenerateUniqueMeshName(name));
 
   auto sub_mesh = std::make_unique<ignition::common::SubMesh>();
@@ -152,11 +148,11 @@ std::unique_ptr<ignition::common::Mesh> Convert(const std::string& name, const G
 
   // Sets the indices based on how the faces were built.
   for (const IndexFace& index_face : geo_mesh.faces()) {
-    // TODO(agalbachicar):    I'm assuming that IndexFace will not have more
-    //                        than 4 vertices. The class supports more, however
-    //                        proper triangulation code needs to be done so as
-    //                        to support it.
-    MALIPUT_DEMAND(index_face.vertices().size() == 3 || index_face.vertices().size() == 4);
+    // Assuming that IndexFace will not have more
+    // than 4 vertices. The class supports more, however
+    // proper triangulation code needs to be done so as
+    // to support it.
+    MALIPUT_THROW_UNLESS(index_face.vertices().size() == 3 || index_face.vertices().size() == 4);
 
     std::vector<std::tuple<ignition::math::Vector3d, int>> ordered_vertices_indices;
     for (const IndexFace::Vertex& ifv : index_face.vertices()) {

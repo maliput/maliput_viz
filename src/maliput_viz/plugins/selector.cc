@@ -39,7 +39,7 @@
 #include <ignition/rendering/Scene.hh>
 #include <maliput/api/lane.h>
 #include <maliput/api/lane_data.h>
-#include <maliput/common/maliput_abort.h>
+#include <maliput/common/maliput_throw.h>
 
 namespace maliput {
 namespace viz {
@@ -50,13 +50,13 @@ Selector::Selector(ignition::rendering::ScenePtr& _scene, double _scaleX, double
       numLanes(_numLanes),
       cubesPerLane(_poolSize),
       minTolerance(_minTolerance < _scaleX * 2.0 ? _scaleX : _minTolerance) {
-  MALIPUT_DEMAND(_poolSize > 3);
-  MALIPUT_DEMAND(_numLanes > 0);
-  MALIPUT_DEMAND(_scene != nullptr);
-  MALIPUT_DEMAND(_minTolerance >= 0);
-  MALIPUT_DEMAND(_scaleX > 0);
-  MALIPUT_DEMAND(_scaleY > 0);
-  MALIPUT_DEMAND(_scaleZ > 0);
+  MALIPUT_THROW_UNLESS(_poolSize > 3);
+  MALIPUT_THROW_UNLESS(_numLanes > 0);
+  MALIPUT_THROW_UNLESS(_scene != nullptr);
+  MALIPUT_THROW_UNLESS(_minTolerance >= 0);
+  MALIPUT_THROW_UNLESS(_scaleX > 0);
+  MALIPUT_THROW_UNLESS(_scaleY > 0);
+  MALIPUT_THROW_UNLESS(_scaleZ > 0);
   ignition::rendering::MaterialPtr material = _scene->CreateMaterial();
   material->SetDiffuse(255.0, 0.0, 0.0, 1.0);
   material->SetAmbient(255.0, 0.0, 0.0, 1.0);
@@ -75,7 +75,7 @@ int Selector::GetRemainingCubes() { return cubesPerLane - 4; }
 int Selector::GetCubeIndex(int _laneIndex) { return 4 + _laneIndex; }
 
 void Selector::SelectLane(const maliput::api::Lane* _lane) {
-  MALIPUT_DEMAND(_lane != nullptr);
+  MALIPUT_THROW_UNLESS(_lane != nullptr);
   const std::string laneId = _lane->id().string();
   const std::string start_bp_id = _lane->GetBranchPoint(maliput::api::LaneEnd::kStart)->id().string();
   const std::string end_bp_id = _lane->GetBranchPoint(maliput::api::LaneEnd::kFinish)->id().string();

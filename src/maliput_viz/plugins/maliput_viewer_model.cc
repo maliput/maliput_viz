@@ -337,7 +337,7 @@ void RoadNetworkQuery::GetRightOfWay(const maliput::api::LaneSRange& lane_s_rang
       const auto rule_state_result = right_of_way_rule_state_provider->GetState(rule.first);
       if (rule_state_result.has_value()) {
         auto it = rule.second.states().find(rule_state_result->state);
-        MALIPUT_DEMAND(it != rule.second.states().end());
+        MALIPUT_THROW_UNLESS(it != rule.second.states().end());
         (*out_) << ", current_state: " << it->second;
       }
     } else {
@@ -564,7 +564,7 @@ void MaliputViewerModel::SetTextLabelState(const std::string& _key, bool _isVisi
 ///////////////////////////////////////////////////////
 const maliput::api::Lane* MaliputViewerModel::GetLaneFromWorldPosition(const ignition::math::Vector3d& _position) {
   const maliput::api::RoadGeometry* rg = this->roadNetwork->road_geometry();
-  MALIPUT_DEMAND(rg != nullptr);
+  MALIPUT_THROW_UNLESS(rg != nullptr);
   const maliput::api::InertialPosition inertial_pos(_position.X(), _position.Y(), _position.Z());
   return rg->ToRoadPosition(inertial_pos).road_position.lane;
 }
@@ -573,7 +573,7 @@ const maliput::api::Lane* MaliputViewerModel::GetLaneFromWorldPosition(const ign
 const maliput::api::RoadPositionResult MaliputViewerModel::GetRoadPositionResult(
     const ignition::math::Vector3d& _position) {
   const maliput::api::RoadGeometry* rg = this->roadNetwork->road_geometry();
-  MALIPUT_DEMAND(rg != nullptr);
+  MALIPUT_THROW_UNLESS(rg != nullptr);
   const maliput::api::InertialPosition inertial_pos(_position.X(), _position.Y(), _position.Z());
   return rg->ToRoadPosition(inertial_pos);
 }
@@ -581,7 +581,7 @@ const maliput::api::RoadPositionResult MaliputViewerModel::GetRoadPositionResult
 ///////////////////////////////////////////////////////
 const maliput::api::Lane* MaliputViewerModel::GetLaneFromId(const std::string& _id) {
   const maliput::api::RoadGeometry* rg = this->roadNetwork->road_geometry();
-  MALIPUT_DEMAND(rg != nullptr);
+  MALIPUT_THROW_UNLESS(rg != nullptr);
   return rg->ById().GetLane(maliput::api::LaneId(_id));
 }
 
@@ -598,10 +598,10 @@ maliput::api::rules::BulbStates MaliputViewerModel::GetBulbStates(const std::str
     const maliput::api::rules::PhaseRingBook* phase_ring_book = this->roadNetwork->phase_ring_book();
     const std::optional<maliput::api::rules::PhaseRing> phase_ring =
         phase_ring_book->GetPhaseRing(maliput::api::rules::PhaseRing::Id(_phaseRingId));
-    MALIPUT_DEMAND(phase_ring.has_value());
+    MALIPUT_THROW_UNLESS(phase_ring.has_value());
     const std::unordered_map<maliput::api::rules::Phase::Id, maliput::api::rules::Phase>& phases = phase_ring->phases();
     const auto phase = phases.find(maliput::api::rules::Phase::Id(_phaseId));
-    MALIPUT_DEMAND(phase != phases.end());
+    MALIPUT_THROW_UNLESS(phase != phases.end());
     const std::optional<maliput::api::rules::BulbStates>& bulb_states = phase->second.bulb_states();
     if (bulb_states.has_value()) {
       return *bulb_states;

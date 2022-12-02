@@ -44,7 +44,7 @@
 #include <maliput/api/rules/phase.h>
 #include <maliput/api/rules/right_of_way_rule.h>
 #include <maliput/api/rules/traffic_lights.h>
-#include <maliput/common/maliput_abort.h>
+#include <maliput/common/maliput_throw.h>
 #include <maliput/utility/generate_obj.h>
 #include <maliput/utility/mesh.h>
 
@@ -92,8 +92,8 @@ class RoadNetworkQuery {
   /// @param rn A pointer to a RoadNetwork. It must not be nullptr.
   /// @throws std::runtime_error When `out` or `rn` are nullptr.
   RoadNetworkQuery(std::ostream* out, maliput::api::RoadNetwork* rn) : out_(out), rn_(rn) {
-    MALIPUT_DEMAND(out_ != nullptr);
-    MALIPUT_DEMAND(rn_ != nullptr);
+    MALIPUT_THROW_UNLESS(out_ != nullptr);
+    MALIPUT_THROW_UNLESS(rn_ != nullptr);
   }
 
   /// Redirects `inertial_position` and `radius` to RoadGeometry::FindRoadPosition().
@@ -398,7 +398,7 @@ std::unordered_map<std::string, std::vector<StringType>> MaliputViewerModel::Get
   phase_rings.reserve(phase_ring_ids.size());
   for (const auto& phase_ring_id : phase_ring_ids) {
     std::optional<maliput::api::rules::PhaseRing> phase_ring = phase_ring_book->GetPhaseRing(phase_ring_id);
-    MALIPUT_DEMAND(phase_ring.has_value());
+    MALIPUT_THROW_UNLESS(phase_ring.has_value());
     const std::unordered_map<maliput::api::rules::Phase::Id, maliput::api::rules::Phase>& phases =
         phase_ring.value().phases();
     std::vector<StringType> phase_ids;

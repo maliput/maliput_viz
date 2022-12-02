@@ -38,7 +38,6 @@
 #include <maliput/api/lane_data.h>
 #include <maliput/api/rules/phase.h>
 #include <maliput/api/rules/traffic_lights.h>
-#include <maliput/common/maliput_abort.h>
 #include <maliput/common/maliput_throw.h>
 
 namespace maliput {
@@ -56,9 +55,9 @@ const std::string TrafficLightManager::kArrowBulbOBJFilePath{"resources/arrow_bu
 TrafficLightManager::TrafficLightManager(ignition::rendering::ScenePtr _scene) : scene(_scene) {
   InitializeBulbMaterials();
   ignition::common::MeshManager* meshManager = ignition::common::MeshManager::Instance();
-  MALIPUT_DEMAND(meshManager);
+  MALIPUT_THROW_UNLESS(meshManager);
   const ignition::common::Mesh* unit_box_mesh = meshManager->MeshByName("unit_box");
-  MALIPUT_DEMAND(unit_box_mesh);
+  MALIPUT_THROW_UNLESS(unit_box_mesh);
   unitBoxAABBMin = unit_box_mesh->Min();
   unitBoxAABBMax = unit_box_mesh->Max();
   CreateRoundBulbMeshInManager();
@@ -172,10 +171,10 @@ void TrafficLightManager::InitializeBulbMaterials() {
 
 void TrafficLightManager::CreateRoundBulbMeshInManager() {
   ignition::common::MeshManager* meshManager = ignition::common::MeshManager::Instance();
-  MALIPUT_DEMAND(meshManager);
+  MALIPUT_THROW_UNLESS(meshManager);
   meshManager->CreateSphere(kBulbSphereName, 1.0f, 32, 32);
   const ignition::common::Mesh* bulbSphere = meshManager->MeshByName(kBulbSphereName);
-  MALIPUT_DEMAND(bulbSphere);
+  MALIPUT_THROW_UNLESS(bulbSphere);
   sphereBulbAABBMax = bulbSphere->Max();
   sphereBulbAABBMin = bulbSphere->Min();
 }
@@ -187,12 +186,12 @@ void TrafficLightManager::CreateArrowBulbMeshInManager() {
                    "variable is not set");
   const std::vector<std::string> resource_paths(paths.begin(), paths.end());
   arrowName = ignition::common::SystemPaths::LocateLocalFile(kArrowBulbOBJFilePath, resource_paths);
-  MALIPUT_DEMAND(!arrowName.empty());
+  MALIPUT_THROW_UNLESS(!arrowName.empty());
 
   ignition::common::MeshManager* meshManager = ignition::common::MeshManager::Instance();
-  MALIPUT_DEMAND(meshManager);
+  MALIPUT_THROW_UNLESS(meshManager);
   const ignition::common::Mesh* arrow = meshManager->Load(arrowName);
-  MALIPUT_DEMAND(arrow);
+  MALIPUT_THROW_UNLESS(arrow);
   arrowBulbAABBMax = arrow->Max();
   arrowBulbAABBMin = arrow->Min();
 }
@@ -297,7 +296,7 @@ maliput::api::rules::Bulb::BoundingBox TrafficLightManager::CreateSingleBulb(
   const maliput::api::rules::Bulb::BoundingBox& bb = _single_bulb->bounding_box();
   // Bulb's bounding box is in terms of 1 meter per unit coordinate. We consider that this bounding box is
   // symmetric and will be used as a scale vector to set the proper size of the bulb in the visualizer.
-  MALIPUT_DEMAND(bb.p_BMax == (-1.0 * bb.p_BMin));
+  MALIPUT_THROW_UNLESS(bb.p_BMax == (-1.0 * bb.p_BMin));
 
   // The visual used has a bounding box size of 1x1x1 meter.
   // Considering that the bulb's bounding box is symmetric and expressed in function of this size, it can be used

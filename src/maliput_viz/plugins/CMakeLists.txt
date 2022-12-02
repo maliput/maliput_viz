@@ -1,6 +1,5 @@
 include_directories(
   ${Qt5Core_INCLUDE_DIRS}
-  # ${CMAKE_SOURCE_DIR}
 )
 
 # ----------------------------------------
@@ -111,7 +110,6 @@ install(
 
 #-------------------------------------------------------------------------------
 # maliput_backend_selection (Qt Object)
-
 QT5_WRAP_CPP(maliput_backend_selection_headers_MOC maliput_backend_selection.hh)
 
 add_library(maliput_backend_selection
