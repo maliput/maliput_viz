@@ -44,10 +44,8 @@
 #include <ignition/rendering/Visual.hh>
 #include <maliput/common/maliput_throw.h>
 
-#include "visualizer/global_attributes.hh"
-
-namespace delphyne {
-namespace gui {
+namespace maliput {
+namespace viz {
 namespace {
 
 // \returns True when @p keyword is found in @p word.
@@ -731,8 +729,8 @@ void MaliputViewerPlugin::UpdateRulesList(const std::string& _laneId) {
   emit RulesListChanged();
 }
 
-}  // namespace gui
-}  // namespace delphyne
+}  // namespace viz
+}  // namespace maliput
 
 // Register this plugin
-IGNITION_ADD_PLUGIN(delphyne::gui::MaliputViewerPlugin, ignition::gui::Plugin)
+IGNITION_ADD_PLUGIN(maliput::viz::MaliputViewerPlugin, ignition::gui::Plugin)

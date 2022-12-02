@@ -36,8 +36,8 @@
 #include <ignition/rendering/Mesh.hh>
 #include <ignition/rendering/Scene.hh>
 
-namespace delphyne {
-namespace gui {
+namespace maliput {
+namespace viz {
 
 ArrowMesh::ArrowMesh(ignition::rendering::ScenePtr& _scene, double _zOffset, double _scaleFactor)
     : zOffset(_zOffset),
@@ -83,5 +83,5 @@ void ArrowMesh::Update() {
   }
 }
 
-}  // namespace gui
-}  // namespace delphyne
+}  // namespace viz
+}  // namespace maliput

@@ -27,9 +27,7 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-#ifndef DELPHYNE_GUI_SELECTOR_HH
-#define DELPHYNE_GUI_SELECTOR_HH
+#pragma once
 
 #include <vector>
 
@@ -38,8 +36,8 @@
 #include <maliput/api/lane.h>
 #include <maliput/api/road_geometry.h>
 
-namespace delphyne {
-namespace gui {
+namespace maliput {
+namespace viz {
 
 /// \brief Selects lanes and outlines them with red cubes along the sides of the lane.
 class Selector {
@@ -196,7 +194,5 @@ class Selector {
   /// \brief Tolerance used for cubes positioning.
   double minTolerance;
 };
-}  // namespace gui
-}  // namespace delphyne
-
-#endif  // DELPHYNE_GUI_SELECTOR_HH
+}  // namespace viz
+}  // namespace maliput

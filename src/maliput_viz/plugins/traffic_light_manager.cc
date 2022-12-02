@@ -29,7 +29,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "traffic_light_manager.hh"
 
-#include <delphyne/macros.h>
+#include <maliput/common/maliput_abort.h>
+#include <maliput/common/maliput_throw.h>
 #include <ignition/common/Console.hh>
 #include <ignition/common/MeshManager.hh>
 #include <ignition/common/SystemPaths.hh>
@@ -40,8 +41,8 @@
 #include <maliput/api/rules/phase.h>
 #include <maliput/api/rules/traffic_lights.h>
 
-namespace delphyne {
-namespace gui {
+namespace maliput {
+namespace viz {
 
 const std::string TrafficLightManager::kGreenMaterialName{"GreenBulb"};
 const std::string TrafficLightManager::kGreenBrightMaterialName{"GreenBulbBright"};
@@ -55,9 +56,9 @@ const std::string TrafficLightManager::kArrowBulbOBJFilePath{"resources/arrow_bu
 TrafficLightManager::TrafficLightManager(ignition::rendering::ScenePtr _scene) : scene(_scene) {
   InitializeBulbMaterials();
   ignition::common::MeshManager* meshManager = ignition::common::MeshManager::Instance();
-  DELPHYNE_DEMAND(meshManager);
+  MALIPUT_DEMAND(meshManager);
   const ignition::common::Mesh* unit_box_mesh = meshManager->MeshByName("unit_box");
-  DELPHYNE_DEMAND(unit_box_mesh);
+  MALIPUT_DEMAND(unit_box_mesh);
   unitBoxAABBMin = unit_box_mesh->Min();
   unitBoxAABBMax = unit_box_mesh->Max();
   CreateRoundBulbMeshInManager();
@@ -171,27 +172,27 @@ void TrafficLightManager::InitializeBulbMaterials() {
 
 void TrafficLightManager::CreateRoundBulbMeshInManager() {
   ignition::common::MeshManager* meshManager = ignition::common::MeshManager::Instance();
-  DELPHYNE_DEMAND(meshManager);
+  MALIPUT_DEMAND(meshManager);
   meshManager->CreateSphere(kBulbSphereName, 1.0f, 32, 32);
   const ignition::common::Mesh* bulbSphere = meshManager->MeshByName(kBulbSphereName);
-  DELPHYNE_DEMAND(bulbSphere);
+  MALIPUT_DEMAND(bulbSphere);
   sphereBulbAABBMax = bulbSphere->Max();
   sphereBulbAABBMin = bulbSphere->Min();
 }
 
 void TrafficLightManager::CreateArrowBulbMeshInManager() {
   const std::list<std::string> paths = ignition::common::SystemPaths::PathsFromEnv("DELPHYNE_GUI_RESOURCE_ROOT");
-  DELPHYNE_VALIDATE(!paths.empty(), std::runtime_error,
+  MALIPUT_VALIDATE(!paths.empty(),
                     "DELPHYNE_RESOURCE_ROOT environment "
                     "variable is not set");
   const std::vector<std::string> resource_paths(paths.begin(), paths.end());
   arrowName = ignition::common::SystemPaths::LocateLocalFile(kArrowBulbOBJFilePath, resource_paths);
-  DELPHYNE_DEMAND(!arrowName.empty());
+  MALIPUT_DEMAND(!arrowName.empty());
 
   ignition::common::MeshManager* meshManager = ignition::common::MeshManager::Instance();
-  DELPHYNE_DEMAND(meshManager);
+  MALIPUT_DEMAND(meshManager);
   const ignition::common::Mesh* arrow = meshManager->Load(arrowName);
-  DELPHYNE_DEMAND(arrow);
+  MALIPUT_DEMAND(arrow);
   arrowBulbAABBMax = arrow->Max();
   arrowBulbAABBMin = arrow->Min();
 }
@@ -212,7 +213,7 @@ void TrafficLightManager::SetBulbMaterial(const maliput::api::rules::UniqueBulbI
       blinkingBulbs[_uniqueBulbId] = _bulb;
       break;
     default:
-      DELPHYNE_VALIDATE(false, std::runtime_error, "Bulb state not supported");
+      MALIPUT_VALIDATE(false, "Bulb state not supported");
       break;
   }
 }
@@ -296,7 +297,7 @@ maliput::api::rules::Bulb::BoundingBox TrafficLightManager::CreateSingleBulb(
   const maliput::api::rules::Bulb::BoundingBox& bb = _single_bulb->bounding_box();
   // Bulb's bounding box is in terms of 1 meter per unit coordinate. We consider that this bounding box is
   // symmetric and will be used as a scale vector to set the proper size of the bulb in the visualizer.
-  DELPHYNE_DEMAND(bb.p_BMax == (-1.0 * bb.p_BMin));
+  MALIPUT_DEMAND(bb.p_BMax == (-1.0 * bb.p_BMin));
 
   // The visual used has a bounding box size of 1x1x1 meter.
   // Considering that the bulb's bounding box is symmetric and expressed in function of this size, it can be used
@@ -354,5 +355,5 @@ maliput::api::rules::Bulb::BoundingBox TrafficLightManager::CreateSingleBulb(
   return bulb_world_bounding_box;
 }
 
-}  // namespace gui
-}  // namespace delphyne
+}  // namespace viz
+}  // namespace maliput

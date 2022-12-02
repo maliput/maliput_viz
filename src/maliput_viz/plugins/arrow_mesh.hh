@@ -27,15 +27,13 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-#ifndef DELPHYNE_GUI_ARROW_MESH_HH
-#define DELPHYNE_GUI_ARROW_MESH_HH
+#pragma once
 
 #include <ignition/math/Vector3.hh>
 #include <ignition/rendering/Scene.hh>
 
-namespace delphyne {
-namespace gui {
+namespace maliput {
+namespace viz {
 
 /// \brief Renders a cone which will act as a pointing arrow when the user clicks over a lane
 class ArrowMesh {
@@ -84,7 +82,6 @@ class ArrowMesh {
   /// \brief Tells the arrow if it should move upwards (1) or downwards (-1).
   int currentDirection;
 };
-}  // namespace gui
-}  // namespace delphyne
 
-#endif  // DELPHYNE_GUI_ARROW_MESH_HH
+}  // namespace viz
+}  // namespace maliput

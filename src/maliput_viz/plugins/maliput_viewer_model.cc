@@ -34,7 +34,6 @@
 #include <map>
 #include <string>
 
-#include <delphyne/roads/road_builder.h>
 #include <ignition/common/Console.hh>
 #include <ignition/rendering/RayQuery.hh>
 #include <maliput/api/lane_data.h>
@@ -45,8 +44,8 @@
 
 #include "maliput_mesh_converter.hh"
 
-using namespace delphyne;
-using namespace gui;
+using namespace maliput;
+using namespace viz;
 
 // Returns a vector of all possible direction usage values. Item order
 // matches maliput::api::rules::DirectionUsageRule::Type enumeration.
@@ -338,7 +337,7 @@ void RoadNetworkQuery::GetRightOfWay(const maliput::api::LaneSRange& lane_s_rang
       const auto rule_state_result = right_of_way_rule_state_provider->GetState(rule.first);
       if (rule_state_result.has_value()) {
         auto it = rule.second.states().find(rule_state_result->state);
-        DELPHYNE_DEMAND(it != rule.second.states().end());
+        MALIPUT_DEMAND(it != rule.second.states().end());
         (*out_) << ", current_state: " << it->second;
       }
     } else {
@@ -431,46 +430,12 @@ const std::map<std::string, std::unique_ptr<MaliputMesh>>& MaliputViewerModel::M
 const std::map<std::string, MaliputLabel>& MaliputViewerModel::Labels() const { return this->labels; }
 
 /////////////////////////////////////////////////
-void MaliputViewerModel::LoadRoadGeometry(const std::string& _maliputFilePath, const std::string& _ruleRegistryFilePath,
-                                          const std::string& _roadRulebookFilePath,
-                                          const std::string& _trafficLightBookFilePath,
-                                          const std::string& _phaseRingFilePath,
-                                          const std::string& _intersectionBookFilePath) {
-  std::ifstream fileStream(_maliputFilePath);
-  if (!fileStream.is_open()) {
-    throw std::runtime_error(_maliputFilePath + " doesn't exist or can't be opened.");
-  }
-  std::string line;
-  while (!fileStream.eof()) {
-    std::getline(fileStream, line);
-    // TODO(#427): When the viewer is able to receive a dictionary of string for the configuration,
-    //             this should change to use directly #maliput::plugin::CreateRoadNetwork("<maliput_backend>", config);
-    if (line.find("<OpenDRIVE>") != std::string::npos) {
-      this->roadNetwork = delphyne::roads::CreateMalidriveRoadNetworkFromXodr(
-          _maliputFilePath.substr(_maliputFilePath.find_last_of("/") + 1), _maliputFilePath, _ruleRegistryFilePath,
-          _roadRulebookFilePath, _trafficLightBookFilePath, _phaseRingFilePath, _intersectionBookFilePath);
-      return;
-    } else if (line.find("maliput_multilane_builder:") != std::string::npos) {
-      this->roadNetwork = delphyne::roads::CreateMultilaneFromFile(_maliputFilePath);
-      return;
-    } else if (line.find("<osm version=") != std::string::npos) {
-      this->roadNetwork = delphyne::roads::CreateMaliputOSMRoadNetwork(
-          _maliputFilePath.substr(_maliputFilePath.find_last_of("/") + 1), _maliputFilePath, {} /* origin */,
-          _ruleRegistryFilePath, _roadRulebookFilePath, _trafficLightBookFilePath, _phaseRingFilePath,
-          _intersectionBookFilePath);
-      return;
-    }
-  }
-  throw std::runtime_error(_maliputFilePath + " doesn't have any of the multilane keys");
-}
-
-/////////////////////////////////////////////////
 void MaliputViewerModel::ConvertMeshes(
     const std::map<std::string, std::pair<maliput::utility::mesh::GeoMesh, maliput::utility::Material>>& _geoMeshes) {
   for (const auto& it : _geoMeshes) {
     auto maliputMesh = std::make_unique<MaliputMesh>();
     // Converts from drake to ignition mesh and sets the state.
-    maliputMesh->mesh = delphyne::mesh::Convert(it.first, it.second.first);
+    maliputMesh->mesh = maliput::viz::mesh::Convert(it.first, it.second.first);
     if (maliputMesh->mesh == nullptr) {
       ignmsg << "Skipping mesh [" << it.first << "] because it is empty.\n";
       maliputMesh->enabled = false;
@@ -599,7 +564,7 @@ void MaliputViewerModel::SetTextLabelState(const std::string& _key, bool _isVisi
 ///////////////////////////////////////////////////////
 const maliput::api::Lane* MaliputViewerModel::GetLaneFromWorldPosition(const ignition::math::Vector3d& _position) {
   const maliput::api::RoadGeometry* rg = this->roadNetwork->road_geometry();
-  DELPHYNE_DEMAND(rg != nullptr);
+  MALIPUT_DEMAND(rg != nullptr);
   const maliput::api::InertialPosition inertial_pos(_position.X(), _position.Y(), _position.Z());
   return rg->ToRoadPosition(inertial_pos).road_position.lane;
 }
@@ -608,7 +573,7 @@ const maliput::api::Lane* MaliputViewerModel::GetLaneFromWorldPosition(const ign
 const maliput::api::RoadPositionResult MaliputViewerModel::GetRoadPositionResult(
     const ignition::math::Vector3d& _position) {
   const maliput::api::RoadGeometry* rg = this->roadNetwork->road_geometry();
-  DELPHYNE_DEMAND(rg != nullptr);
+  MALIPUT_DEMAND(rg != nullptr);
   const maliput::api::InertialPosition inertial_pos(_position.X(), _position.Y(), _position.Z());
   return rg->ToRoadPosition(inertial_pos);
 }
@@ -616,7 +581,7 @@ const maliput::api::RoadPositionResult MaliputViewerModel::GetRoadPositionResult
 ///////////////////////////////////////////////////////
 const maliput::api::Lane* MaliputViewerModel::GetLaneFromId(const std::string& _id) {
   const maliput::api::RoadGeometry* rg = this->roadNetwork->road_geometry();
-  DELPHYNE_DEMAND(rg != nullptr);
+  MALIPUT_DEMAND(rg != nullptr);
   return rg->ById().GetLane(maliput::api::LaneId(_id));
 }
 
@@ -633,10 +598,10 @@ maliput::api::rules::BulbStates MaliputViewerModel::GetBulbStates(const std::str
     const maliput::api::rules::PhaseRingBook* phase_ring_book = this->roadNetwork->phase_ring_book();
     const std::optional<maliput::api::rules::PhaseRing> phase_ring =
         phase_ring_book->GetPhaseRing(maliput::api::rules::PhaseRing::Id(_phaseRingId));
-    DELPHYNE_DEMAND(phase_ring.has_value());
+    MALIPUT_DEMAND(phase_ring.has_value());
     const std::unordered_map<maliput::api::rules::Phase::Id, maliput::api::rules::Phase>& phases = phase_ring->phases();
     const auto phase = phases.find(maliput::api::rules::Phase::Id(_phaseId));
-    DELPHYNE_DEMAND(phase != phases.end());
+    MALIPUT_DEMAND(phase != phases.end());
     const std::optional<maliput::api::rules::BulbStates>& bulb_states = phase->second.bulb_states();
     if (bulb_states.has_value()) {
       return *bulb_states;
@@ -646,7 +611,7 @@ maliput::api::rules::BulbStates MaliputViewerModel::GetBulbStates(const std::str
 }
 
 ///////////////////////////////////////////////////////
-MaliputLabelType delphyne::gui::FromString(const std::string& _type) {
+MaliputLabelType maliput::viz::FromString(const std::string& _type) {
   if (_type == "lane_text_label") {
     return MaliputLabelType::kLane;
   } else if (_type == "branchpoint_text_label") {

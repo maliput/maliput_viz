@@ -30,7 +30,7 @@
 
 #include "selector.hh"
 
-#include <delphyne/macros.h>
+#include <maliput/common/maliput_abort.h>
 #include <ignition/common/Console.hh>
 #include <ignition/math/Helpers.hh>
 #include <ignition/math/Matrix4.hh>
@@ -41,8 +41,8 @@
 #include <maliput/api/lane.h>
 #include <maliput/api/lane_data.h>
 
-namespace delphyne {
-namespace gui {
+namespace maliput {
+namespace viz {
 
 Selector::Selector(ignition::rendering::ScenePtr& _scene, double _scaleX, double _scaleY, double _scaleZ, int _poolSize,
                    int _numLanes, double _minTolerance)
@@ -50,13 +50,13 @@ Selector::Selector(ignition::rendering::ScenePtr& _scene, double _scaleX, double
       numLanes(_numLanes),
       cubesPerLane(_poolSize),
       minTolerance(_minTolerance < _scaleX * 2.0 ? _scaleX : _minTolerance) {
-  DELPHYNE_DEMAND(_poolSize > 3);
-  DELPHYNE_DEMAND(_numLanes > 0);
-  DELPHYNE_DEMAND(_scene != nullptr);
-  DELPHYNE_DEMAND(_minTolerance >= 0);
-  DELPHYNE_DEMAND(_scaleX > 0);
-  DELPHYNE_DEMAND(_scaleY > 0);
-  DELPHYNE_DEMAND(_scaleZ > 0);
+  MALIPUT_DEMAND(_poolSize > 3);
+  MALIPUT_DEMAND(_numLanes > 0);
+  MALIPUT_DEMAND(_scene != nullptr);
+  MALIPUT_DEMAND(_minTolerance >= 0);
+  MALIPUT_DEMAND(_scaleX > 0);
+  MALIPUT_DEMAND(_scaleY > 0);
+  MALIPUT_DEMAND(_scaleZ > 0);
   ignition::rendering::MaterialPtr material = _scene->CreateMaterial();
   material->SetDiffuse(255.0, 0.0, 0.0, 1.0);
   material->SetAmbient(255.0, 0.0, 0.0, 1.0);
@@ -75,7 +75,7 @@ int Selector::GetRemainingCubes() { return cubesPerLane - 4; }
 int Selector::GetCubeIndex(int _laneIndex) { return 4 + _laneIndex; }
 
 void Selector::SelectLane(const maliput::api::Lane* _lane) {
-  DELPHYNE_DEMAND(_lane != nullptr);
+  MALIPUT_DEMAND(_lane != nullptr);
   const std::string laneId = _lane->id().string();
   const std::string start_bp_id = _lane->GetBranchPoint(maliput::api::LaneEnd::kStart)->id().string();
   const std::string end_bp_id = _lane->GetBranchPoint(maliput::api::LaneEnd::kFinish)->id().string();
@@ -296,5 +296,5 @@ bool Selector::DoPointsViolateTolerance(const maliput::api::InertialPosition& _f
   return (_first_point - _second_point).length() < minTolerance;
 }
 
-}  // namespace gui
-}  // namespace delphyne
+}  // namespace viz
+}  // namespace maliput

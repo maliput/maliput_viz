@@ -41,8 +41,8 @@
 #include <maliput/api/rules/phase.h>
 #include <maliput/api/rules/traffic_lights.h>
 
-namespace delphyne {
-namespace gui {
+namespace maliput {
+namespace viz {
 
 /// \brief Class that creates a representation for traffic light and controls them.
 class TrafficLightManager final {
@@ -199,7 +199,7 @@ class TrafficLightManager final {
   /// \brief Used to change the blinking bulb's state.
   bool blinkTrafficLight{false};
 };
-}  // namespace gui
-}  // namespace delphyne
+}  // namespace viz
+}  // namespace maliput
 
 #endif  // TRAFFIC_LIGHT_MANAGER_HH

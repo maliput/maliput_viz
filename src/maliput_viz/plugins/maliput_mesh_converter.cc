@@ -44,7 +44,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include <delphyne/macros.h>
+#include <maliput/common/maliput_abort.h>
 #include <ignition/common/SubMesh.hh>
 #include <ignition/math/Vector3.hh>
 #include <maliput/api/branch_point.h>
@@ -57,7 +57,8 @@
 
 using namespace maliput::utility::mesh;
 
-namespace delphyne {
+namespace maliput {
+namespace viz {
 namespace mesh {
 namespace {
 
@@ -74,7 +75,7 @@ namespace {
 // @throws std::runtime_error When `unordered_vector`' size is zero.
 std::vector<std::tuple<ignition::math::Vector3d, int>> PolarSort(
     const std::vector<std::tuple<ignition::math::Vector3d, int>>& unordered_vector) {
-  DELPHYNE_DEMAND(unordered_vector.size() > 0);
+  MALIPUT_DEMAND(unordered_vector.size() > 0);
 
   std::vector<std::tuple<ignition::math::Vector3d, int>> ordered_vector = unordered_vector;
 
@@ -155,7 +156,7 @@ std::unique_ptr<ignition::common::Mesh> Convert(const std::string& name, const G
     //                        than 4 vertices. The class supports more, however
     //                        proper triangulation code needs to be done so as
     //                        to support it.
-    DELPHYNE_DEMAND(index_face.vertices().size() == 3 || index_face.vertices().size() == 4);
+    MALIPUT_DEMAND(index_face.vertices().size() == 3 || index_face.vertices().size() == 4);
 
     std::vector<std::tuple<ignition::math::Vector3d, int>> ordered_vertices_indices;
     for (const IndexFace::Vertex& ifv : index_face.vertices()) {
@@ -184,4 +185,5 @@ std::unique_ptr<ignition::common::Mesh> Convert(const std::string& name, const G
 }
 
 }  // namespace mesh
-}  // namespace delphyne
+}  // namespace viz
+}  // namespace maliput

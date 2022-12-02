@@ -38,7 +38,8 @@
 #include <ignition/common/Mesh.hh>
 #include <maliput/utility/mesh.h>
 
-namespace delphyne {
+namespace maliput {
+namespace viz {
 namespace mesh {
 
 /// Converts a GeoMesh into an ignition::common::Mesh.
@@ -59,6 +60,7 @@ std::unique_ptr<ignition::common::Mesh> Convert(const std::string& name,
                                                 const maliput::utility::mesh::GeoMesh& geo_mesh);
 
 }  // namespace mesh
-}  // namespace delphyne
+}  // namespace viz
+}  // namespace maliput
 
 #endif

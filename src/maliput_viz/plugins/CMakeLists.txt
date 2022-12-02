@@ -69,7 +69,6 @@ set_target_properties(selector
 )
 
 target_link_libraries(selector
-  delphyne::public_headers
   ignition-common3::ignition-common3
   ignition-math6::ignition-math6
   ignition-rendering3::ignition-rendering3
@@ -96,7 +95,6 @@ set_target_properties(traffic_light_manager
 )
 
 target_link_libraries(traffic_light_manager
-  delphyne::public_headers
   ignition-common3::ignition-common3
   ignition-math6::ignition-math6
   ignition-rendering3::ignition-rendering3
@@ -164,7 +162,6 @@ set_target_properties(MaliputViewerPlugin
 
 target_link_libraries(MaliputViewerPlugin
     maliput_viz::arrow_mesh
-    maliput_viz::global_attributes
     maliput_viz::maliput_backend_selection
     maliput_viz::maliput_viewer_model
     maliput_viz::selector

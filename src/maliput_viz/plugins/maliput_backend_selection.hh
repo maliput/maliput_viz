@@ -39,8 +39,8 @@
 
 #include "maliput_viewer_model.hh"
 
-namespace delphyne {
-namespace gui {
+namespace maliput {
+namespace viz {
 
 /// Represents a key-value parameter for a Maliput backend.
 struct Parameter {
@@ -123,5 +123,5 @@ class MaliputBackendSelection : public QObject {
   std::unique_ptr<maliput::plugin::RoadNetworkLoader> roadNetworkLoader;
 };
 
-}  // namespace gui
-}  // namespace delphyne
+}  // namespace viz
+}  // namespace maliput

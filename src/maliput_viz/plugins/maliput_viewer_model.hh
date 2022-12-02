@@ -27,9 +27,7 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-#ifndef DELPHYNE_GUI_MALIPUTVIEWERMODEL_HH
-#define DELPHYNE_GUI_MALIPUTVIEWERMODEL_HH
+#pragma once
 
 #include <map>
 #include <memory>
@@ -37,7 +35,7 @@
 #include <sstream>
 #include <string>
 
-#include <delphyne/macros.h>
+#include <maliput/common/maliput_abort.h>
 #include <ignition/common/Mesh.hh>
 #include <ignition/math/Vector3.hh>
 #include <maliput/api/lane.h>
@@ -78,14 +76,14 @@ std::ostream& operator<<(std::ostream& out, const maliput::api::LaneSRoute& lane
 // Serializes `zone_type` into `out`.
 std::ostream& operator<<(std::ostream& out, const maliput::api::rules::RightOfWayRule::ZoneType& zone_type);
 
-namespace delphyne {
-namespace gui {
+namespace maliput {
+namespace viz {
 
 /// Query and logs results to RoadGeometry or RoadRulebook minimizing the
 /// overhead of getting the right calls / asserting conditions.
 class RoadNetworkQuery {
  public:
-  DELPHYNE_NO_COPY_NO_MOVE_NO_ASSIGN(RoadNetworkQuery)
+  MALIPUT_NO_COPY_NO_MOVE_NO_ASSIGN(RoadNetworkQuery)
 
   /// Constructs a RoadNetworkQuery.
   ///
@@ -94,8 +92,8 @@ class RoadNetworkQuery {
   /// @param rn A pointer to a RoadNetwork. It must not be nullptr.
   /// @throws std::runtime_error When `out` or `rn` are nullptr.
   RoadNetworkQuery(std::ostream* out, maliput::api::RoadNetwork* rn) : out_(out), rn_(rn) {
-    DELPHYNE_DEMAND(out_ != nullptr);
-    DELPHYNE_DEMAND(rn_ != nullptr);
+    MALIPUT_DEMAND(out_ != nullptr);
+    MALIPUT_DEMAND(rn_ != nullptr);
   }
 
   /// Redirects `inertial_position` and `radius` to RoadGeometry::FindRoadPosition().
@@ -287,17 +285,6 @@ class MaliputViewerModel {
   maliput::api::rules::BulbStates GetBulbStates(const std::string& _phaseRingId, const std::string& _phaseId) const;
 
  private:
-  /// \brief Loads a maliput RoadGeometry of multilane from
-  /// @p _maliputFilePath.
-  /// \details Opens the file, iterates for each line, and tries to match it
-  /// with "maliput_multilane_builder:".
-  /// If the key doesn't exist in the file, it's not valid.
-  /// Otherwise the correct loader will be called to parse the file.
-  /// \param _maliputFilePath The YAML file path to parse.
-  void LoadRoadGeometry(const std::string& _maliputFilePath, const std::string& _ruleRegistryFilePath,
-                        const std::string& _roadRulebookFilePath, const std::string& _trafficLightBookFilePath,
-                        const std::string& _phaseRingFilePath, const std::string& _intersectionBookFilePath);
-
   /// \brief Converts @p _geoMeshes into a
   ///        std::map<std::string, std::unique_ptr<ignition::common::Mesh>>
   ///        filling the instance variable meshes.
@@ -411,7 +398,7 @@ std::unordered_map<std::string, std::vector<StringType>> MaliputViewerModel::Get
   phase_rings.reserve(phase_ring_ids.size());
   for (const auto& phase_ring_id : phase_ring_ids) {
     std::optional<maliput::api::rules::PhaseRing> phase_ring = phase_ring_book->GetPhaseRing(phase_ring_id);
-    DELPHYNE_DEMAND(phase_ring.has_value());
+    MALIPUT_DEMAND(phase_ring.has_value());
     const std::unordered_map<maliput::api::rules::Phase::Id, maliput::api::rules::Phase>& phases =
         phase_ring.value().phases();
     std::vector<StringType> phase_ids;
@@ -499,7 +486,5 @@ StringType MaliputViewerModel::GetPhaseRightOfWayRules(const maliput::api::rules
   return StringType(rightOfWayRulesPhaseRing.str().c_str());
 }
 
-}  // namespace gui
-}  // namespace delphyne
-
-#endif
+}  // namespace viz
+}  // namespace maliput

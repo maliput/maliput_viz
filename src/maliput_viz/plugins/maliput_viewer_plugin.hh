@@ -50,8 +50,8 @@
 #include "selector.hh"
 #include "traffic_light_manager.hh"
 
-namespace delphyne {
-namespace gui {
+namespace maliput {
+namespace viz {
 
 /// Model for describing a tree view for the phase rings and their phases.
 /// Treeview example:
@@ -443,5 +443,5 @@ class MaliputViewerPlugin : public ignition::gui::Plugin {
   std::atomic<bool> setUpScene{false};
 };
 
-}  // namespace gui
-}  // namespace delphyne
+}  // namespace viz
+}  // namespace maliput

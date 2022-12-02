@@ -34,8 +34,8 @@
 #include <ignition/common/Console.hh>
 #include <ignition/gui/Application.hh>
 
-namespace delphyne {
-namespace gui {
+namespace maliput {
+namespace viz {
 namespace {
 
 std::unique_ptr<maliput::plugin::RoadNetworkLoader> CreateRoadNetworkLoader(
@@ -171,5 +171,5 @@ void MaliputBackendSelection::OnLoadButtonPressed() {
       std::make_unique<MaliputViewerModel>(roadNetworkLoader->operator()(parameterTableModel->GetMapFromParameters()));
 }
 
-}  // namespace gui
-}  // namespace delphyne
+}  // namespace viz
+}  // namespace maliput
