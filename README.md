@@ -42,7 +42,7 @@ The UI provides several options for changing visibilities of the meshes and also
 The following video shows a maliput Road Network being loaded using [`maliput_malidrive`](https://github.com/maliput/maliput_malidrive) backend.
 Besides the XODR files for the `RoadGeometry`, also other entities are being loaded to complete the `RoadNetwork` such as: `RuleRegistry`, `RoadRulebook`, `TrafficLightBook` and `PhaseRingBook`.
 
-https://user-images.githubusercontent.com/53065142/205377851-1a431030-c869-46b9-aa0c-8eed3fb26587.mp4
+<img src="docs/maliput_viz.gif" >
 
 ## Installation
 
@@ -61,6 +61,8 @@ See [Installation Docs](https://maliput.readthedocs.io/en/latest/installation.ht
 ```
 sudo apt install python3-rosdep python3-colcon-common-extensions
 ```
+
+
 
 #### Build
 
