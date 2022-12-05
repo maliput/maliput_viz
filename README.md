@@ -26,12 +26,12 @@ In the top-right of the window options about the road network loading can be fou
 
 `maliput_viz` uses the [maliput plugin architecture](https://maliput.readthedocs.io/en/latest/html/deps/maliput/html/maliput_plugin_architecture.html) for loading the maliput backends in runtime.
 
-In general, each backend would receive a set of parameter that defines the behavior of the road network loader. For example, for the `maliput_malidrive` backend, the `opendrive_file` parameter holds the path to a `XODR` map file.
+In general, each backend would receive a set of parameters that defines the behavior of the road network loader. For example, in the `maliput_malidrive` backend, the `opendrive_file` parameter holds the path to a `XODR` map file.
 
-When a backend is selected, the default parameter for that particular backend are filled up.
+When a backend is selected, the default parameter set for it is filled up.
 The user can add, edit or remove any parameter as they please.
 
-After hitting the `Load Road Network` button the correspondant backend will load up a maliput RoadNetwork and it will be displayed.
+After hitting the `Load Road Network` button, the correspondent backend will load up a maliput `RoadNetwork` and it will be displayed.
 
 <img src="docs/maliput_malidrive_loaded.png">
 
