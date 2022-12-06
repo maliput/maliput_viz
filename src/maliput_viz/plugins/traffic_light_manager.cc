@@ -180,9 +180,9 @@ void TrafficLightManager::CreateRoundBulbMeshInManager() {
 }
 
 void TrafficLightManager::CreateArrowBulbMeshInManager() {
-  const std::list<std::string> paths = ignition::common::SystemPaths::PathsFromEnv("DELPHYNE_GUI_RESOURCE_ROOT");
+  const std::list<std::string> paths = ignition::common::SystemPaths::PathsFromEnv("MALIPUT_VIZ_RESOURCE_ROOT");
   MALIPUT_VALIDATE(!paths.empty(),
-                   "DELPHYNE_RESOURCE_ROOT environment "
+                   "MALIPUT_VIZ_RESOURCE_ROOT environment "
                    "variable is not set");
   const std::vector<std::string> resource_paths(paths.begin(), paths.end());
   arrowName = ignition::common::SystemPaths::LocateLocalFile(kArrowBulbOBJFilePath, resource_paths);

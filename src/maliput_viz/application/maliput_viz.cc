@@ -46,7 +46,9 @@ namespace {
 
 /// Constants.
 constexpr char kVersionStr[] = "Maliput Viz 0.1.0";
-constexpr char kDefaultLayout[] = "maliput_viz_layout.config";
+constexpr char kMaliputVizLayoutPath[] = "layouts/maliput_viz_layout.config";
+constexpr char kMaliputVizResourceRootEnv[] = "MALIPUT_VIZ_RESOURCE_ROOT";
+constexpr char kMaliputVizGuiPluginsEnv[] = "MALIPUT_VIZ_GUI_PLUGINS";
 
 /// Environment variable to look for user custom plugins.
 constexpr char kVisualizerPluginPath[] = "VISUALIZER_PLUGIN_PATH";
@@ -60,11 +62,20 @@ std::string defaultConfigPath() {
   return ignition::common::joinPaths(homePath, ".maliput_viz", "maliput_viz.config");
 }
 
+std::string GetMaliputVizConfigFile() {
+  const std::list<std::string> paths = ignition::common::SystemPaths::PathsFromEnv(kMaliputVizResourceRootEnv);
+  if (paths.size() == 0) {
+    ignerr << kMaliputVizResourceRootEnv << " env var isn't set" << std::endl;
+    return "";
+  }
+  if (paths.size() > 1) {
+    ignwarn << "There are more than one path in " << kMaliputVizResourceRootEnv << " env var. " << std::endl;
+  }
+  return ignition::common::joinPaths(paths.front(), kMaliputVizLayoutPath);
+}
+
 /////////////////////////////////////////////////
 int Main(int argc, char** argv) {
-  static const std::string initialConfigFile =
-      ignition::common::joinPaths(MALIPUT_VIZ_INITIAL_CONFIG_PATH, kDefaultLayout);
-
   ignition::common::Console::SetVerbosity(3);
   ignmsg << kVersionStr << std::endl;
 
@@ -77,11 +88,13 @@ int Main(int argc, char** argv) {
   // Look for custom plugins.
   app.SetPluginPathEnv(kVisualizerPluginPath);
 
-  // Then look for plugins on compile-time defined path.
-  // Plugins installed by delphyne_gui end up here
-  app.AddPluginPath(MALIPUT_VIZ_PLUGIN_PATH);
+  // Add paths for plugin discovery. The MaliputViewerPlugin is expected to be in.
+  const std::list<std::string> paths = ignition::common::SystemPaths::PathsFromEnv(kMaliputVizGuiPluginsEnv);
+  for (const auto& path : paths) {
+    app.AddPluginPath(path);
+  }
 
-  const bool layout_loaded = app.LoadConfig(initialConfigFile);
+  const bool layout_loaded = app.LoadConfig(GetMaliputVizConfigFile());
   // If no layout has been loaded, exit the application.
   if (!layout_loaded) {
     ignerr << "Unable to load the configuration file, exiting." << std::endl;

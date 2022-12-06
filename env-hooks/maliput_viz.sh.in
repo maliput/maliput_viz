@@ -1,0 +1,2 @@
+ament_prepend_unique_value MALIPUT_VIZ_RESOURCE_ROOT "$AMENT_CURRENT_PREFIX/share/@PROJECT_NAME@"
+ament_prepend_unique_value MALIPUT_VIZ_GUI_PLUGINS "$AMENT_CURRENT_PREFIX/lib/gui_plugins"

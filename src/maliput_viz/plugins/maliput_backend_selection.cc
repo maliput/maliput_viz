@@ -141,7 +141,6 @@ MaliputBackendSelection::MaliputBackendSelection(QObject* parent) : QObject(pare
 }
 
 void MaliputBackendSelection::OnBackendSelected(const QString& _backendName) {
-  std::cout << "backend selected: " << _backendName.toStdString() << std::endl;
   // Clears the table model.
   parameterTableModel->ClearParameters();
 

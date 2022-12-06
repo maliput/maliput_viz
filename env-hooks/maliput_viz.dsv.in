@@ -1,0 +1,2 @@
+prepend-non-duplicate;MALIPUT_VIZ_RESOURCE_ROOT;share/@PROJECT_NAME@
+prepend-non-duplicate;MALIPUT_VIZ_GUI_PLUGINS;lib/gui_plugins

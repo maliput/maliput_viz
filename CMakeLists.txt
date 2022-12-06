@@ -66,6 +66,9 @@ endif()
 # Export
 ##############################################################################
 
+ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/${PROJECT_NAME}.dsv.in")
+ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/${PROJECT_NAME}.sh.in")
+
 ament_export_dependencies(ament_cmake)
 ament_export_targets(${PROJECT_NAME}-targets HAS_LIBRARY_TARGET)
 
