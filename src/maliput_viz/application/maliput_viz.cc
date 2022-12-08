@@ -40,6 +40,8 @@
 #include <ignition/gui/qt.h>
 #endif
 
+#include "maliput_viz/flags/gflags.h"
+
 namespace maliput {
 namespace viz {
 namespace {
@@ -76,7 +78,10 @@ std::string GetMaliputVizConfigFile() {
 
 /////////////////////////////////////////////////
 int Main(int argc, char** argv) {
-  ignition::common::Console::SetVerbosity(3);
+  flags::SetUsageMessage();
+  flags::ParseCommandLineFlags(argc, argv, true);
+
+  ignition::common::Console::SetVerbosity(FLAGS_verbosity);
   ignmsg << kVersionStr << std::endl;
 
   // Initialize app

@@ -1,4 +1,6 @@
 add_subdirectory(application)
 add_subdirectory(config)
+add_subdirectory(flags)
 add_subdirectory(plugins)
 add_subdirectory(resources)
+add_subdirectory(tools)

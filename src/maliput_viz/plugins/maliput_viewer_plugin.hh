@@ -37,6 +37,7 @@
 #include <unordered_map>
 
 #include <QStandardItem>
+#include <gflags/gflags.h>
 #include <ignition/common/MouseEvent.hh>
 #include <ignition/gui/Plugin.hh>
 #include <ignition/rendering/RayQuery.hh>

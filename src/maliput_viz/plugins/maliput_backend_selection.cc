@@ -170,5 +170,16 @@ void MaliputBackendSelection::OnLoadButtonPressed() {
       std::make_unique<MaliputViewerModel>(roadNetworkLoader->operator()(parameterTableModel->GetMapFromParameters()));
 }
 
+void MaliputBackendSelection::LoadBackendByDemand(const std::string& _backendName,
+                                                  const std::map<std::string, std::string>& _parameters) {
+  OnBackendSelected(QString::fromStdString(_backendName));
+  maliputViewerModel = std::make_unique<MaliputViewerModel>(roadNetworkLoader->operator()(_parameters));
+  parameterTableModel->ClearParameters();
+  for (const auto& parameter : _parameters) {
+    parameterTableModel->AddParameter(QString::fromStdString(parameter.first),
+                                      QString::fromStdString(parameter.second));
+  }
+}
+
 }  // namespace viz
 }  // namespace maliput

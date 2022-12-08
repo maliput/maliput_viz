@@ -160,9 +160,11 @@ set_target_properties(MaliputViewerPlugin
 
 target_link_libraries(MaliputViewerPlugin
     maliput_viz::arrow_mesh
+    maliput_viz::flags
     maliput_viz::maliput_backend_selection
     maliput_viz::maliput_viewer_model
     maliput_viz::selector
+    maliput_viz::tools
     maliput_viz::traffic_light_manager
     ignition-gui3::ignition-gui3
     ignition-common3::ignition-common3
