@@ -69,7 +69,7 @@ int ParameterTableModel::columnCount(const QModelIndex& parent) const { return r
 QVariant ParameterTableModel::data(const QModelIndex& index, int role) const {
   QString data;
   const int row = index.row();
-  return role == kParameterRole ? parameterList[row].parameterName : parameterList[row].parameterValue;
+  return GetData(row, role);
 }
 
 QHash<int, QByteArray> ParameterTableModel::roleNames() const {
@@ -77,6 +77,10 @@ QHash<int, QByteArray> ParameterTableModel::roleNames() const {
       {kParameterRole, "parameter"},
       {kValueRole, "value"},
   };
+}
+
+QString ParameterTableModel::GetData(int row, int role) const {
+  return role == kParameterRole ? parameterList[row].parameterName : parameterList[row].parameterValue;
 }
 
 std::map<std::string, std::string> ParameterTableModel::GetMapFromParameters() const {

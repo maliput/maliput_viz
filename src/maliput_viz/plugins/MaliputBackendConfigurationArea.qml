@@ -94,6 +94,7 @@ GridLayout {
   TableView {
     id: parametersTable
     Layout.fillWidth: true
+    selectionMode: 1 /* Single Selection */
     model: parameterTableModel
     TableViewColumn {
         role: "parameter"
@@ -104,6 +105,11 @@ GridLayout {
         role: "value"
         title: "Value"
         width: parametersTable.width * 0.4
+    }
+    onClicked: {
+      console.log("Clicked on row: ", row);
+      addKeyTextField.text = parameterTableModel.GetData(row, 101 /* parameter */);
+      addValueTextField.text = parameterTableModel.GetData(row, 102 /* value */);
     }
     itemDelegate: Item {
       Text {
