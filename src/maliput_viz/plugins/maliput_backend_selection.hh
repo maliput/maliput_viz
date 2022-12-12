@@ -74,6 +74,9 @@ class ParameterTableModel : public QAbstractTableModel {
   /// Removes all parameters from the table.
   Q_INVOKABLE void ClearParameters();
 
+  /// Get data from a row.
+  Q_INVOKABLE QString GetData(int row, int role) const;
+
  protected:
   /// Documentation inherited
   Q_INVOKABLE int rowCount(const QModelIndex& parent = QModelIndex()) const override;
