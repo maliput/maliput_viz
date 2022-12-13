@@ -81,7 +81,7 @@ int Main(int argc, char** argv) {
   flags::SetUsageMessage();
   flags::ParseCommandLineFlags(argc, argv, true);
 
-  ignition::common::Console::SetVerbosity(FLAGS_verbosity);
+  ignition::common::Console::SetVerbosity(flags::GetVerbosity());
   ignmsg << kVersionStr << std::endl;
 
   // Initialize app

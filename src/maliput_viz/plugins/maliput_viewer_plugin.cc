@@ -511,10 +511,10 @@ void MaliputViewerPlugin::timerEvent(QTimerEvent* _event) {
   timer.stop();
 
   // Verify if the visualizer should initiate a new road network from CLI.
-  if (FLAGS_yaml_file_path != "") {
-    tools::YamlConfigFileParser config_file_parser(FLAGS_yaml_file_path);
-    maliputBackendSelection.LoadBackendByDemand(config_file_parser.GetBackendName(),
-                                                config_file_parser.GetBackendParameters());
+  const std::string yaml_file_path = flags::GetYamlFilePath();
+  if (!yaml_file_path.empty()) {
+    const tools::MaliputVizConfig config{tools::LoadYamlConfigFile(yaml_file_path)};
+    maliputBackendSelection.LoadBackendByDemand(config.backend_name, config.backend_parameters);
     OnNewRoadNetwork();
   }
 }

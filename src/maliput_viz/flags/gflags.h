@@ -29,18 +29,26 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
-#include <gflags/gflags.h>
-
-DECLARE_int32(verbosity);
-DECLARE_string(yaml_file_path);
+#include <string>
 
 namespace maliput {
 namespace viz {
 namespace flags {
 
+/// @brief Parses the command line flags.
+/// The gflags::ParseCommandLineFlags() function is called under the hood.
 void ParseCommandLineFlags(int argc, char** argv, bool remove_flags);
 
+/// @brief Sets the usage message.
+/// The gflags::SetUsageMessage() function is called under the hood with a defined message for the maliput_viz
+/// application.
 void SetUsageMessage();
+
+/// @returns Returns the value of the --verbosity flag.
+int GetVerbosity();
+
+/// @returns Returns the value of the --yaml_file_path flag.
+std::string GetYamlFilePath();
 
 }  // namespace flags
 }  // namespace viz

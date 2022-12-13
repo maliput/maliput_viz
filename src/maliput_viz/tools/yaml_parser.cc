@@ -36,27 +36,29 @@ namespace maliput {
 namespace viz {
 namespace tools {
 
-YamlConfigFileParser::YamlConfigFileParser(const std::string& file_path) {
+MaliputVizConfig LoadYamlConfigFile(const std::string& file_path) {
+  static constexpr char kMaliputVizKey[] = "maliput_viz";
+  static constexpr char kMaliputBackendKey[] = "maliput_backend";
+  static constexpr char kParametersKey[] = "parameters";
   YAML::Node root = YAML::LoadFile(file_path);
   const auto maliput_viz_node = root[kMaliputVizKey];
   MALIPUT_VALIDATE(maliput_viz_node.IsDefined(), "maliput_viz node not found in config file");
   MALIPUT_VALIDATE(maliput_viz_node.IsMap(), "maliput_viz node is not a map");
   const auto maliput_backend_node = maliput_viz_node[kMaliputBackendKey];
   MALIPUT_VALIDATE(maliput_backend_node.IsDefined(), "maliput_backend node not found in config file");
-  backend_name_ = maliput_backend_node.as<std::string>();
+
+  MaliputVizConfig config{};
+  config.backend_name = maliput_backend_node.as<std::string>();
   const auto parameters_node = maliput_viz_node[kParametersKey];
   if (parameters_node.IsDefined()) {
     // Note that if it isn't defined then we just leave the parameters map empty.
     MALIPUT_VALIDATE(parameters_node.IsMap(), "parameters node is not a map");
   }
   for (const auto& param : parameters_node) {
-    parameters_[param.first.as<std::string>()] = param.second.as<std::string>();
+    config.backend_parameters[param.first.as<std::string>()] = param.second.as<std::string>();
   }
+  return config;
 }
-
-std::string YamlConfigFileParser::GetBackendName() const { return backend_name_; }
-
-std::map<std::string, std::string> YamlConfigFileParser::GetBackendParameters() const { return parameters_; }
 
 }  // namespace tools
 }  // namespace viz

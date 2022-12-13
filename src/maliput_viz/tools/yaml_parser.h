@@ -37,7 +37,15 @@ namespace maliput {
 namespace viz {
 namespace tools {
 
-/// Parser for a YAML file to be used by the maliput_viz application.
+/// Holds the configuration parameters loaded from a YAML file.
+struct MaliputVizConfig {
+  /// The name of the backend to be used.
+  std::string backend_name{};
+  /// The parameters to be passed to the backend's loader.
+  std::map<std::string, std::string> backend_parameters{};
+};
+
+/// Parses a YAML file to be used by the maliput_viz application.
 /// The YAML file must have the following structure:
 /// @code {.yaml}
 /// maliput_viz:"
@@ -48,25 +56,7 @@ namespace tools {
 ///      // ...
 ///      <key_N>: <value_N> "
 /// @endcode
-class YamlConfigFileParser {
- public:
-  /// @brief  Constructor
-  /// @param file_path Path to a YAML file.
-  YamlConfigFileParser(const std::string& file_path);
-  ~YamlConfigFileParser() = default;
-
-  /// @returns The parsed backend name.
-  std::string GetBackendName() const;
-  /// @returns The parsed parameters
-  std::map<std::string, std::string> GetBackendParameters() const;
-
- private:
-  static constexpr char kMaliputVizKey[] = "maliput_viz";
-  static constexpr char kMaliputBackendKey[] = "maliput_backend";
-  static constexpr char kParametersKey[] = "parameters";
-  std::string backend_name_;
-  std::map<std::string, std::string> parameters_;
-};
+MaliputVizConfig LoadYamlConfigFile(const std::string& file_path);
 
 }  // namespace tools
 }  // namespace viz

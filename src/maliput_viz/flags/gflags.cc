@@ -27,14 +27,13 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #include "maliput_viz/flags/gflags.h"
 
-#include <iostream>
-#include <sstream>
 #include <string>
 
+#include <gflags/gflags.h>
 #include <maliput/common/filesystem.h>
+#include <maliput/common/logger.h>
 
 // Gflags
 DEFINE_int32(verbosity, 3, "Verbosity is set within a range between [0-4]");
@@ -46,7 +45,7 @@ static bool ValidateConfigFilePath(const char* flagname, const std::string& valu
   if (!value.empty()) {
     maliput::common::Path path{value};
     if (!path.exists() || !path.is_file()) {
-      std::cout << "Please verify that '" << value << "' is a valid file path." << std::endl;
+      maliput::log()->error("Please verify that '{}' is a valid file path.", value);
       return false;
     }
   }
@@ -61,40 +60,37 @@ namespace viz {
 namespace flags {
 namespace {
 
-// Returns a string with the usage message.
-std::string GetUsageMessage() {
-  std::stringstream ss;
-  ss << "Application for maliput road network visualization" << std::endl << std::endl;
-  ss << "  maliput_viz [--<flag_1>] [--<flag_2>] .. [--<flag_n>] " << std::endl << std::endl;
-  ss << " * Summary: " << std::endl;
-  ss << "    This application offers a visualizer for the maliput road networks " << std::endl;
-  ss << "    It provides a GUI for interactively select a maliput backend and load the road network" << std::endl;
-  ss << "    passing the correspondent parameters. " << std::endl;
-  ss << "    In addition, a YAML configuration file could be passed via command line for setting up the visualizer "
-        "beforehand."
-     << std::endl
-     << std::endl;
-  ss << " * Examples of use: " << std::endl;
-  ss << "    1. Running the visualizer: " << std::endl;
-  ss << "       $ maliput_viz" << std::endl;
-  ss << "    2. Running the visualizer with a higher verbosity level: " << std::endl;
-  ss << "       $ maliput_viz --verbosity=4" << std::endl;
-  ss << "    3. Running the visualizer with a configuration file: " << std::endl;
-  ss << "       $ maliput_viz --yaml_file_path=<path-to-yaml-file> " << std::endl << std::endl;
-  ss << " * YAML file configuration: " << std::endl;
-  ss << "    The --yaml_file_path flag expects a valid path to a YAML file." << std::endl;
-  ss << "    The YAML file should contain the configuration for loading the road network." << std::endl;
-  ss << "    The structure of the YAML file should be: " << std::endl;
-  ss << "     |  maliput_viz:" << std::endl;
-  ss << "     |    maliput_backend: <backend_name> " << std::endl;
-  ss << "     |    parameters: " << std::endl;
-  ss << "     |       <key_1>: <value_1> " << std::endl;
-  ss << "     |       <key_2>: <value_2> " << std::endl;
-  ss << "     |       ...  " << std::endl;
-  ss << "     |       <key_N>: <value_N> " << std::endl << std::endl;
+constexpr const char* kUsageMessage =
+    R"R(Application for maliput road network visualization.
 
-  return ss.str();
-}
+  Usage: maliput_viz [--<flag_1>] [--<flag_2>] .. [--<flag_n>]
+
+  * Summary:
+     This application offers a visualizer for the maliput road networks.
+     It provides a GUI for interactively select a maliput backend and load the road network
+     passing the correspondent parameters.
+     In addition, a YAML configuration file could be passed via command line for setting up the visualizer beforehand.
+
+  * Examples of use:
+     1. Running the visualizer:
+        $ maliput_viz
+     2. Running the visualizer with a higher verbosity level:
+        $ maliput_viz --verbosity=4
+     3. Running the visualizer with a configuration file:
+        $ maliput_viz --yaml_file_path=<path-to-yaml-file>
+
+  * YAML file configuration:
+     The --yaml_file_path flag expects a valid path to a YAML file.
+     The YAML file should contain the configuration for loading the road network.
+     The structure of the YAML file should be:
+      |  maliput_viz:
+      |    maliput_backend: <backend_name>
+      |    parameters:
+      |       <key_1>: <value_1>
+      |       <key_2>: <value_2>
+      |       ...
+      |       <key_N>: <value_N>
+)R";
 
 }  // namespace
 
@@ -102,7 +98,11 @@ void ParseCommandLineFlags(int argc, char** argv, bool remove_flags) {
   gflags::ParseCommandLineFlags(&argc, &argv, remove_flags);
 }
 
-void SetUsageMessage() { gflags::SetUsageMessage(GetUsageMessage()); }
+void SetUsageMessage() { gflags::SetUsageMessage(static_cast<std::string>(kUsageMessage)); }
+
+int GetVerbosity() { return FLAGS_verbosity; }
+
+std::string GetYamlFilePath() { return FLAGS_yaml_file_path; }
 
 }  // namespace flags
 }  // namespace viz
