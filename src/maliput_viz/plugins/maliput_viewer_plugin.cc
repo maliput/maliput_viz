@@ -44,6 +44,9 @@
 #include <ignition/rendering/Visual.hh>
 #include <maliput/common/maliput_throw.h>
 
+#include "maliput_viz/flags/gflags.h"
+#include "maliput_viz/tools/yaml_parser.h"
+
 namespace maliput {
 namespace viz {
 namespace {
@@ -506,6 +509,14 @@ void MaliputViewerPlugin::timerEvent(QTimerEvent* _event) {
   setUpScene = true;
   ignmsg << "MaliputViewerPlugin has been initialized." << std::endl;
   timer.stop();
+
+  // Verify if the visualizer should initiate a new road network from CLI.
+  const std::string yaml_file_path = flags::GetYamlFilePath();
+  if (!yaml_file_path.empty()) {
+    const tools::MaliputVizConfig config{tools::LoadYamlConfigFile(yaml_file_path)};
+    maliputBackendSelection.LoadBackendByDemand(config.backend_name, config.backend_parameters);
+    OnNewRoadNetwork();
+  }
 }
 
 ignition::gui::Plugin* MaliputViewerPlugin::FilterPluginsByTitle(const std::string& _pluginTitle) {

@@ -109,6 +109,10 @@ class MaliputBackendSelection : public QObject {
   /// Returns a pointer to the MaliputViewerModel.
   MaliputViewerModel* GetMaliputModel() { return maliputViewerModel.get(); }
 
+  /// Load a backend with the given parameters. This is expected to be called by a parent class, skipping the use of the
+  /// gui.
+  void LoadBackendByDemand(const std::string& _backendName, const std::map<std::string, std::string>& _parameters);
+
  protected slots:
   /// Called when the user press the Load RoadNetwork button.
   void OnLoadButtonPressed();
