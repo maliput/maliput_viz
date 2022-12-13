@@ -2,8 +2,8 @@
 Changelog for package maliput_viz
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.0 (2022-12-13)
+------------------
 * Adds command line support for the maliput viz app. (`#18 <https://github.com/maliput/maliput_viz/issues/18>`_)
 * Fills edition boxes when a parameter is clicked. (`#17 <https://github.com/maliput/maliput_viz/issues/17>`_)
 * Uses env hooks instead of compiled paths. (`#10 <https://github.com/maliput/maliput_viz/issues/10>`_)
