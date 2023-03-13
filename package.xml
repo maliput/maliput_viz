@@ -10,9 +10,9 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
   <doc_depend>ament_cmake_doxygen</doc_depend>
 
+  <depend>ignition-gui3</depend>
   <depend>maliput</depend>
   <depend>yaml-cpp</depend>
-  <build_depend>ignition-gui3</build_depend>
 
   <test_depend>ament_cmake_clang_format</test_depend>
   <test_depend>ament_cmake_gtest</test_depend>
