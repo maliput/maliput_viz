@@ -45,7 +45,7 @@ static bool ValidateConfigFilePath(const char* flagname, const std::string& valu
   if (!value.empty()) {
     maliput::common::Path path{value};
     if (!path.exists() || !path.is_file()) {
-      maliput::log()->error("Please verify that '{}' is a valid file path.", value);
+      maliput::log()->error("Please verify that '", value, "' is a valid file path.");
       return false;
     }
   }
