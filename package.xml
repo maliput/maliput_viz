@@ -11,6 +11,7 @@
   <doc_depend>ament_cmake_doxygen</doc_depend>
 
   <depend>ignition-gui3</depend>
+  <depend>libgflags-dev</depend>
   <depend>maliput</depend>
   <depend>yaml-cpp</depend>
 
