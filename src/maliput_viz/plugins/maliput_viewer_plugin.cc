@@ -665,6 +665,7 @@ void MaliputViewerPlugin::UpdateLaneInfoArea(const maliput::api::RoadPositionRes
   const maliput::api::RBounds endLaneBounds = lane->lane_bounds(lane->length());
   const maliput::api::RBounds laneBounds = lane->lane_bounds(lanePos.s());
   const maliput::api::Rotation rotation = lane->GetOrientation(lanePos);
+  const double curvature = lane->GetCurvature(lanePos);
   // Update message to be displayed in the info area.
   std::stringstream ss;
   ss << "----  LANE ID: " << lane->id() << "  -----";
@@ -672,6 +673,7 @@ void MaliputViewerPlugin::UpdateLaneInfoArea(const maliput::api::RoadPositionRes
   ss << "\nLanePosition ------> " << lanePos;
   ss << "\nInertialPosition --> " << _roadPositionResult.nearest_position;
   ss << "\nRotation --> " << rotation;
+  ss << "\nCurvature --> " << curvature << " 1/m";
   ss << "\nRBounds ------> (min: " << laneBounds.min() << ", max: " << laneBounds.max() << ")";
   ss << "\nHBounds ------> (min: " << hBounds.min() << ", max: " << hBounds.max() << ")";
   ss << "\nSegmentId: ------------> " << lane->segment()->id().string();
