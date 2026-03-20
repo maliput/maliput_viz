@@ -8,5 +8,6 @@
     <file>RulesListArea.qml</file>
     <file>PhaseSelectionArea.qml</file>
     <file>InfoArea.qml</file>
+    <file>SignInfoArea.qml</file>
   </qresource>
 </RCC>

@@ -161,4 +161,23 @@ Rectangle {
     anchors.left: parent.left
     anchors.right: parent.right
   }
+  // Traffic Sign Info Panel
+  Loader {
+    id: signInfoLoader
+    width: parent.width
+    source: "SignInfoArea.qml"
+    anchors.top: rulesListLoader.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+  }
+  ToolSeparator {
+    id: signInfoSeparator
+    orientation: Qt.Horizontal
+    anchors.top: signInfoLoader.bottom
+    anchors.topMargin: 15
+    anchors.left: parent.left
+    anchors.leftMargin: 10
+    anchors.right: parent.right
+    anchors.rightMargin: 10
+  }
 }

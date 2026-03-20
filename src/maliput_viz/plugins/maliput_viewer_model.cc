@@ -592,6 +592,12 @@ std::vector<const maliput::api::rules::TrafficLight*> MaliputViewerModel::GetTra
 }
 
 ///////////////////////////////////////////////////////
+std::vector<const maliput::api::rules::TrafficSign*> MaliputViewerModel::GetTrafficSigns() const {
+  return this->roadNetwork != nullptr ? this->roadNetwork->traffic_sign_book()->TrafficSigns()
+                                      : std::vector<const maliput::api::rules::TrafficSign*>();
+}
+
+///////////////////////////////////////////////////////
 maliput::api::rules::BulbStates MaliputViewerModel::GetBulbStates(const std::string& _phaseRingId,
                                                                   const std::string& _phaseId) const {
   if (this->roadNetwork && !_phaseRingId.empty() && !_phaseId.empty()) {
