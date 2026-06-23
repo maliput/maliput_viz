@@ -51,8 +51,7 @@ TrafficSignManager::TrafficSignManager(ignition::rendering::ScenePtr _scene) : s
   signMaterial->SetTransparency(0.5);
 }
 
-void TrafficSignManager::CreateTrafficSigns(
-    const std::vector<const maliput::api::rules::TrafficSign*>& _signs) {
+void TrafficSignManager::CreateTrafficSigns(const std::vector<const maliput::api::rules::TrafficSign*>& _signs) {
   signs_.reserve(_signs.size());
   for (const maliput::api::rules::TrafficSign* sign : _signs) {
     CreateSingleTrafficSign(sign);
@@ -98,8 +97,7 @@ void TrafficSignManager::CreateSingleTrafficSign(const maliput::api::rules::Traf
       ign_q * ignition::math::Vector3d(bb_local_pos.x(), bb_local_pos.y(), bb_local_pos.z());
 
   const maliput::math::Vector3& size = bb.box_size();
-  const double half_diagonal =
-      0.5 * std::sqrt(size.x() * size.x() + size.y() * size.y() + size.z() * size.z());
+  const double half_diagonal = 0.5 * std::sqrt(size.x() * size.x() + size.y() * size.y() + size.z() * size.z());
 
   ignition::rendering::VisualPtr visual = scene->CreateVisual();
   if (!visual) {

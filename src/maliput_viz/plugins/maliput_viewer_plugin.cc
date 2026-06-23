@@ -715,8 +715,7 @@ void MaliputViewerPlugin::UpdateSignInfoArea(const maliput::api::rules::TrafficS
   }
 
   const auto type_map = maliput::api::rules::TrafficSignTypeMapper();
-  const std::string type_str =
-      type_map.count(_sign->type()) ? std::string(type_map.at(_sign->type())) : "unknown";
+  const std::string type_str = type_map.count(_sign->type()) ? std::string(type_map.at(_sign->type())) : "unknown";
 
   const maliput::api::InertialPosition& pos = _sign->position_road_network();
   const maliput::api::Rotation& rot = _sign->orientation_road_network();
