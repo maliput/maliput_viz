@@ -30,6 +30,7 @@
 #include "maliput_viewer_plugin.hh"
 
 #include <algorithm>
+#include <sstream>
 #include <vector>
 
 #include <ignition/common/Console.hh>
@@ -138,6 +139,8 @@ QStringList MaliputViewerPlugin::ListLanes() const { return listLanes; }
 QString MaliputViewerPlugin::RulesList() const { return rulesList; }
 
 QString MaliputViewerPlugin::LaneInfo() const { return laneInfo; }
+
+QString MaliputViewerPlugin::SignInfo() const { return signInfo; }
 
 QList<bool> MaliputViewerPlugin::LayerCheckboxes() const {
   // Returns the checkboxes' state by default.
@@ -417,6 +420,8 @@ void MaliputViewerPlugin::Clear() {
     phaseTreeModel.Clear();
     // Resert traffic light manager.
     trafficLightManager->Clear();
+    // Clear traffic sign manager.
+    trafficSignManager->Clear();
     isRoadNetworkLoaded = false;
   }
   newRoadNetwork = false;
@@ -554,6 +559,8 @@ void MaliputViewerPlugin::SetUpScene() {
                                         selMinTolerance);
   // Create traffic light manager.
   trafficLightManager = std::make_unique<TrafficLightManager>(this->scene);
+  // Create traffic sign manager.
+  trafficSignManager = std::make_unique<TrafficSignManager>(this->scene);
 }
 
 bool MaliputViewerPlugin::eventFilter(QObject* _obj, QEvent* _event) {
@@ -577,6 +584,7 @@ bool MaliputViewerPlugin::eventFilter(QObject* _obj, QEvent* _event) {
         this->RenderRoadMeshes(maliputBackendSelection.GetMaliputModel()->Meshes());
         this->RenderLabels(maliputBackendSelection.GetMaliputModel()->Labels());
         this->trafficLightManager->CreateTrafficLights(maliputBackendSelection.GetMaliputModel()->GetTrafficLights());
+        this->trafficSignManager->CreateTrafficSigns(maliputBackendSelection.GetMaliputModel()->GetTrafficSigns());
         this->renderMeshesOption.executeLabelRendering = false;
         this->renderMeshesOption.executeMeshRendering = false;
         this->newRoadNetwork = false;
@@ -616,6 +624,11 @@ void MaliputViewerPlugin::MouseClickHandler(const ignition::math::Vector3d& _sce
                                 ? RoadPositionResultValue()
                                 : RoadPositionResultValue(newRoadPositionResult, _distance);
   roadPositionResultValue.SetDirty(true);
+
+  // Check if a traffic sign was clicked and update the sign info panel accordingly.
+  const maliput::api::rules::TrafficSign* clicked_sign =
+      trafficSignManager->GetTrafficSignAtPoint(_sceneInertialPosition, /*tolerance=*/0.5);
+  UpdateSignInfoArea(clicked_sign);
 }
 
 void MaliputViewerPlugin::UpdateLaneSelectionOnLeftClick() {
@@ -692,6 +705,39 @@ void MaliputViewerPlugin::UpdateLaneInfoArea(const maliput::api::RoadPositionRes
 
   laneInfo = QString::fromStdString(ss.str());
   emit LaneInfoChanged();
+}
+
+void MaliputViewerPlugin::UpdateSignInfoArea(const maliput::api::rules::TrafficSign* _sign) {
+  if (_sign == nullptr) {
+    signInfo = QString{};
+    emit SignInfoChanged();
+    return;
+  }
+
+  const auto type_map = maliput::api::rules::TrafficSignTypeMapper();
+  const std::string type_str = type_map.count(_sign->type()) ? std::string(type_map.at(_sign->type())) : "unknown";
+
+  const maliput::api::InertialPosition& pos = _sign->position_road_network();
+  const maliput::api::Rotation& rot = _sign->orientation_road_network();
+  const maliput::math::BoundingBox& bb = _sign->bounding_box();
+
+  std::stringstream ss;
+  ss << "---- TRAFFIC SIGN: " << _sign->id().string() << " ----";
+  ss << "\nType:         " << type_str;
+  ss << "\nMessage:      " << (_sign->message().has_value() ? _sign->message().value() : "(none)");
+  ss << "\nPosition:     (x=" << pos.x() << ", y=" << pos.y() << ", z=" << pos.z() << ")";
+  ss << "\nOrientation:  (roll=" << rot.roll() << ", pitch=" << rot.pitch() << ", yaw=" << rot.yaw() << ")";
+  ss << "\nRelated Lanes: [";
+  for (const auto& lane_id : _sign->related_lanes()) {
+    ss << lane_id.string() << " ";
+  }
+  ss << "]";
+  ss << "\nBoundingBox:"
+     << " center=(" << bb.position().x() << ", " << bb.position().y() << ", " << bb.position().z() << ")"
+     << " size=(" << bb.box_size().x() << ", " << bb.box_size().y() << ", " << bb.box_size().z() << ")";
+
+  signInfo = QString::fromStdString(ss.str());
+  emit SignInfoChanged();
 }
 
 void MaliputViewerPlugin::UpdateLane(const std::string& _id) {

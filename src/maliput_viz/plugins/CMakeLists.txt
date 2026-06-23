@@ -108,6 +108,32 @@ install(
   ARCHIVE DESTINATION lib
 )
 
+# ----------------------------------------
+# traffic_sign_manager library.
+add_library(traffic_sign_manager
+  traffic_sign_manager.cc
+)
+add_library(maliput_viz::traffic_sign_manager ALIAS traffic_sign_manager)
+set_target_properties(traffic_sign_manager
+  PROPERTIES
+    OUTPUT_NAME maliput_viz_traffic_sign_manager
+)
+
+target_link_libraries(traffic_sign_manager
+  ignition-common3::ignition-common3
+  ignition-math6::ignition-math6
+  ignition-rendering3::ignition-rendering3
+  maliput::api
+)
+
+install(
+  TARGETS traffic_sign_manager
+  EXPORT ${PROJECT_NAME}-targets
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
+
 #-------------------------------------------------------------------------------
 # maliput_backend_selection (Qt Object)
 QT5_WRAP_CPP(maliput_backend_selection_headers_MOC maliput_backend_selection.hh)
@@ -166,6 +192,7 @@ target_link_libraries(MaliputViewerPlugin
     maliput_viz::selector
     maliput_viz::tools
     maliput_viz::traffic_light_manager
+    maliput_viz::traffic_sign_manager
     ignition-gui3::ignition-gui3
     ignition-common3::ignition-common3
     ignition-transport8::ignition-transport8

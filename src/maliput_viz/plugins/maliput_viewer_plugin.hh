@@ -49,6 +49,7 @@
 #include "maliput_backend_selection.hh"
 #include "selector.hh"
 #include "traffic_light_manager.hh"
+#include "traffic_sign_manager.hh"
 
 namespace maliput {
 namespace viz {
@@ -127,6 +128,9 @@ class MaliputViewerPlugin : public ignition::gui::Plugin {
   /// Property used to load the info about the surface clicked in the correspondant UI's area.
   Q_PROPERTY(QString laneInfo READ LaneInfo NOTIFY LaneInfoChanged)
 
+  /// Property used to display the fields of the traffic sign clicked in the correspondant UI's area.
+  Q_PROPERTY(QString signInfo READ SignInfo NOTIFY SignInfoChanged)
+
  public:
   /// \brief Default constructor.
   MaliputViewerPlugin();
@@ -143,6 +147,9 @@ class MaliputViewerPlugin : public ignition::gui::Plugin {
 
   /// Called when a lane is clicked. Update info related to the clicked surface.
   Q_INVOKABLE QString LaneInfo() const;
+
+  /// Called when a traffic sign is clicked. Returns the sign's fields as a formatted string.
+  Q_INVOKABLE QString SignInfo() const;
 
   /// Called when a new RoadNetwork is loaded to default the checkboxes' state
   /// in the layers selection panel for the meshes.
@@ -161,6 +168,9 @@ class MaliputViewerPlugin : public ignition::gui::Plugin {
 
   /// \brief Signal emitted to update the info about the clicked lane.
   void LaneInfoChanged();
+
+  /// \brief Signal emitted to update the info about the clicked traffic sign.
+  void SignInfoChanged();
 
   /// \brief Signal emitted to reset the checkboxes' state for the layers visualization
   ///        when a new RoadNetwork is loaded.
@@ -340,6 +350,10 @@ class MaliputViewerPlugin : public ignition::gui::Plugin {
   /// \param[in] _roadPositionResult Result of the mapped RoadPosition after a click in the scene.
   void UpdateLaneInfoArea(const maliput::api::RoadPositionResult& _roadPositionResult);
 
+  /// \brief Updates the sign info area with the fields of the given traffic sign.
+  /// \param[in] _sign Pointer to the clicked traffic sign. May be nullptr to clear the area.
+  void UpdateSignInfoArea(const maliput::api::rules::TrafficSign* _sign);
+
   /// Keys used by the checkbox logic to visualize different layers and by
   /// the default map #objectVisualDefaults.
   /// @{
@@ -391,6 +405,9 @@ class MaliputViewerPlugin : public ignition::gui::Plugin {
   /// \brief Holds the info about the clicked surface that is displayed in the UI.
   QString laneInfo{};
 
+  /// \brief Holds the fields of the last clicked traffic sign displayed in the UI.
+  QString signInfo{};
+
   /// @brief Triggers an event every `kTimerPeriodInMs` to try to get the scene.
   QBasicTimer timer;
 
@@ -429,6 +446,9 @@ class MaliputViewerPlugin : public ignition::gui::Plugin {
 
   /// \brief Manager of traffic lights visualization.
   std::unique_ptr<TrafficLightManager> trafficLightManager;
+
+  /// \brief Manager of traffic signs visualization.
+  std::unique_ptr<TrafficSignManager> trafficSignManager;
 
   /// \brief Holds the RoadPositionResult upon a left click in the scene.
   RoadPositionResultValue roadPositionResultValue;
